@@ -18,13 +18,17 @@ body {
     font-weight: inherit;
     margin: 0;
     padding: 0;
-    background-color: inherit;
+    background-color: transparent;
     border: none;
     outline: none;
 }
 
 :where(h1, h2, h3, h4, h5, h6, p) {
     pointer-events: none;
+}
+
+:where(a, button) {
+    cursor: pointer;
 }
 
 .heading1 {

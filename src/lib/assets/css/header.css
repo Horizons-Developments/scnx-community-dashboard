@@ -104,7 +104,7 @@ body.no-scroll {
 
 .navigation-table {
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 1fr 3.5fr 1fr;
     width: 100%;
 }
 
@@ -146,6 +146,8 @@ body.no-scroll {
 }
 
 .navigation-link {
+    display: flex;
+    width: 100%;
     font-family: "Orbitron", Arial, sans-serif;
     font-size: 1rem;
     color: #FFFFFF;
@@ -179,17 +181,12 @@ body.no-scroll {
     background-color: #FFFFFF;
 }
 
-.navigation-input {
-    display: none;
-}
-
 .navigation-label {
     display: flex;
     width: 100%;
     height: 100%;
     justify-content: center;
     align-items: center;
-    pointer-events: auto;
 }
 
 .navigation-submenu {
@@ -216,7 +213,7 @@ body.no-scroll {
     position: relative;
     flex-direction: row;
     width: 100%;
-    height: 80px;
+    height: 70px;
     justify-content: center;
     align-items: center;
     border: 2px solid #FFFFFF;
@@ -297,9 +294,16 @@ body.no-scroll {
 
 
 
-.navigation:has(.navigation-input:checked) .navigation-submenu {
+.navigation-menu.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.navigation-submenu.active {
     opacity: 1;
     transform: translateX(0);
+    transition: 0.25s ease;
+    pointer-events: auto;
 }
 
 
