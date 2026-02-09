@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1769698142557,
-      "tag": "0000_skinny_glorian",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1769698588249,
-      "tag": "0001_loose_black_tarantula",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1769877165389,
-      "tag": "0002_foamy_molten_man",
+      "when": 1770664384127,
+      "tag": "0000_ancient_maddog",
       "breakpoints": true
     }
   ]

@@ -5,9 +5,12 @@
 	export let data;
 
 	$: lang = $page.url.pathname.startsWith("/de") ? "de" : "en";
+	$: count = data.subNavigation?.length ?? 0;
+    $: subNavigationClass = `subNavigation-${count}-columns`;
+
 </script>
 
-<Header {lang} {data} />
+<Header {lang} {data} subNavigation={data.subNavigation} subNavigationClass={subNavigationClass} />
 
 <main>
 	<slot />

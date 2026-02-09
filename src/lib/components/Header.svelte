@@ -14,6 +14,8 @@
 	import { pgTable } from "drizzle-orm/pg-core";
     export let lang = "en";
     export let data;
+    export let subNavigation = [];
+    export let subNavigationClass = "";
 
     function switchLanguage(lang) {
         const switcher = document.querySelector(".language-switcher");
@@ -213,7 +215,6 @@
             <li class="navigation-section">
                 <div class="language-switcher" class:de={lang === 'de'} class:en={lang === 'en'}>
                     <div class="language-switcher-slider"></div>
-                    <div class="language-switcher-label-slider"></div>
                     <div class="language-switcher-element">
                         <button class="language-switcher-label {lang === "de" ? "language-switcher-label-active" : ""}" on:click={() => switchLanguage("de")}>
                             <img class="language-switcher-image" src="/images/country-flags/de.png" alt="DE">
@@ -388,6 +389,16 @@
             </li>
         </ul>
 
+    </nav>
+
+    <nav class="sub-navigation {subNavigationClass}">
+        <ul class="sub-navigation-menu">
+            {#each subNavigation as item}
+                <li class="sub-navigation-element">
+                    <svelte:component this={item.icon} class="navigation-icon" />
+                </li>
+            {/each}
+        </ul>
     </nav>
 
 {/if}
