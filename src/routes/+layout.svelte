@@ -12,6 +12,6 @@
 
 <Header {lang} {data} subNavigation={data.subNavigation} subNavigationClass={subNavigationClass} />
 
-<main>
+<main class="main">
 	<slot />
 </main>

@@ -3,5 +3,3 @@ export function load({ locals }) {
         user: locals.user
     };
 }
-
-export const trailingSlash = "always";

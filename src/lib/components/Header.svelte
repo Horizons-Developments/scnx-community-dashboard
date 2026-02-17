@@ -6,11 +6,7 @@
     import { get } from "svelte/store";
     import { onMount } from "svelte";
     import { navigationOpen } from "$lib/js/navigation";
-    import { IconHome } from "@tabler/icons-svelte";
-    import { IconApps } from "@tabler/icons-svelte";
-    import { IconCode } from "@tabler/icons-svelte";
-    import { IconChevronLeft } from "@tabler/icons-svelte";
-    import { IconChevronRight } from "@tabler/icons-svelte";
+    import { IconHome, IconApps, IconCode, IconChevronLeft, IconChevronRight, IconList, IconPlus, IconInfoCircle } from "@tabler/icons-svelte";
 	import { pgTable } from "drizzle-orm/pg-core";
     export let lang = "en";
     export let data;
@@ -53,10 +49,6 @@
             }
         }
 
-        if (!newUrl.endsWith("/")) {
-            newUrl += "/";
-        }
-
         goto(newUrl, { keepfocus: true, noScroll: true });
     }
 
@@ -70,6 +62,8 @@
         navigationOpen.set(false);
         submenuOpen = null;
     }
+
+    $: path = $page.url.pathname;
 
 </script>
 
@@ -241,7 +235,7 @@
             </li>
 
             <li class="navigation-element">
-                <a class="navigation-link" href="/de/" on:click={closeNavigation}>
+                <a class="navigation-link" href="/de" on:click={closeNavigation}>
                     <div class="navigation-table">
                         <div class="navigation-table-element">
                             <IconHome class="navigation-icon" />
@@ -305,7 +299,7 @@
             </li>
             
             <li class="navigation-element navigation-element-active">
-                <a class="navigation-link" href="/de/content/" on:click={closeNavigation}>
+                <a class="navigation-link" href="/de/content" on:click={closeNavigation}>
                     <div class="navigation-table">
                         <div class="navigation-table-element">
                             <IconApps class="navigation-icon" />
@@ -318,7 +312,7 @@
             </li>
 
             <li class="navigation-element">
-                <a class="navigation-link" href="/de/content/" on:click={closeNavigation}>
+                <a class="navigation-link" href="/de/content" on:click={closeNavigation}>
                     <div class="navigation-table">
                         <div class="navigation-table-element">
                             <IconCode class="navigation-icon" />
@@ -331,7 +325,7 @@
             </li>
 
             <li class="navigation-element">
-                <a class="navigation-link" href="/de/content/" on:click={closeNavigation}>
+                <a class="navigation-link" href="/de/content" on:click={closeNavigation}>
                     <div class="navigation-table">
                         <div class="navigation-table-element">
                             <IconApps class="navigation-icon" />
@@ -363,26 +357,39 @@
             </li>
 
             <li class="navigation-element">
-                <a class="navigation-link" href="/de/create/" on:click={closeNavigation}>
+                <a class="navigation-link" href="/de/create" on:click={closeNavigation}>
                     <div class="navigation-table">
                         <div class="navigation-table-element">
-                            <IconApps class="navigation-icon" />
+                            <IconList class="navigation-icon" />
                         </div>
                         <div class="navigation-table-element">
-                            <span>Link 1</span>
+                            <span>Übersicht</span>
                         </div>
                     </div>
                 </a>
             </li>
 
             <li class="navigation-element">
-                <a class="navigation-link" href="/de/create/" on:click={closeNavigation}>
+                <a class="navigation-link" href="/de/create/new" on:click={closeNavigation}>
                     <div class="navigation-table">
                         <div class="navigation-table-element">
-                            <IconApps class="navigation-icon" />
+                            <IconPlus class="navigation-icon" />
                         </div>
                         <div class="navigation-table-element">
-                            <span>Link 2</span>
+                            <span>Einreichen</span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+
+            <li class="navigation-element">
+                <a class="navigation-link" href="/de/create/guidelines" on:click={closeNavigation}>
+                    <div class="navigation-table">
+                        <div class="navigation-table-element">
+                            <IconInfoCircle class="navigation-icon" />
+                        </div>
+                        <div class="navigation-table-element">
+                            <span>Richtlinien</span>
                         </div>
                     </div>
                 </a>
@@ -391,14 +398,18 @@
 
     </nav>
 
-    <nav class="sub-navigation {subNavigationClass}">
-        <ul class="sub-navigation-menu">
-            {#each subNavigation as item}
-                <li class="sub-navigation-element">
-                    <svelte:component this={item.icon} class="navigation-icon" />
-                </li>
-            {/each}
-        </ul>
-    </nav>
+    {#if subNavigation.length > 0}
+
+        <nav class="sub-navigation {subNavigationClass}">
+            <ul class="sub-navigation-menu">
+                {#each subNavigation as item}
+                    <li class="sub-navigation-element">
+                        <svelte:component this={item.icon} class="sub-navigation-icon" />
+                    </li>
+                {/each}
+            </ul>
+        </nav>
+    
+    {/if}
 
 {/if}
