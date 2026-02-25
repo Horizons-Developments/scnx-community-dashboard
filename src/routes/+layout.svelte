@@ -6,11 +6,10 @@
 
 	$: lang = $page.url.pathname.startsWith("/de") ? "de" : "en";
 	$: count = data.subNavigation?.length ?? 0;
-    $: subNavigationClass = `subNavigation-${count}-columns`;
 
 </script>
 
-<Header {lang} {data} subNavigation={data.subNavigation} subNavigationClass={subNavigationClass} />
+<Header {lang} {data} />
 
 <main class="main">
 	<slot />

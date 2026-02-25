@@ -6,23 +6,21 @@
     import { get } from "svelte/store";
     import { onMount } from "svelte";
     import { navigationOpen } from "$lib/js/navigation";
-    import { IconHome, IconApps, IconCode, IconChevronLeft, IconChevronRight, IconList, IconPlus, IconInfoCircle } from "@tabler/icons-svelte";
+    import { IconHome, IconApps, IconCode, IconChevronLeft, IconChevronRight, IconList, IconPlus, IconInfoCircle, IconMenu2, IconX } from "@tabler/icons-svelte";
 	import { pgTable } from "drizzle-orm/pg-core";
+    import { fade, scale } from "svelte/transition";
     export let lang = "en";
     export let data;
-    export let subNavigation = [];
-    export let subNavigationClass = "";
 
     function switchLanguage(lang) {
-        const switcher = document.querySelector(".language-switcher");
+        const languageSwitcher = document.querySelector(".language-switcher");
 
-        switcher.classList.toggle("en", lang === "en");
-        switcher.classList.toggle("de", lang === "de");
+        languageSwitcher.classList.toggle("en", lang === "en");
+        languageSwitcher.classList.toggle("de", lang === "de");
 
         setTimeout(() => {
             performSwitchLanguage(lang);
-        }, 125);
-
+        }, 100);
     }
 
     function performSwitchLanguage(lang) {
@@ -64,6 +62,8 @@
     }
 
     $: path = $page.url.pathname;
+    $: subNavigation = $page.data?.subNavigation ?? [];
+    $: activeItem = subNavigation.findIndex(item => item.link === path);
 
 </script>
 
@@ -197,7 +197,16 @@
             </a>
         </div>
         <button class="navigation-toggle" class:open={$navigationOpen} on:click={() => navigationOpen.update(v => !v)} aria-label="Open/close menu">
-            <span></span>
+            {#if !$navigationOpen}
+                <span clas="navigation-toggle-icon-wrapper" in:fade={{ duration: 1000 }} out:fade={{ duration: 125 }}>
+                    <IconMenu2 class="navigation-toggle-icon" />
+                </span>
+            {/if}
+            {#if $navigationOpen}
+                <span clas="navigation-toggle-icon-wrapper" in:fade={{ duration: 1000 }} out:fade={{ duration: 125 }}>
+                    <IconX class="navigation-toggle-icon" />
+                </span>
+            {/if}
         </button>
     </header>
 
@@ -399,17 +408,25 @@
     </nav>
 
     {#if subNavigation.length > 0}
-
-        <nav class="sub-navigation {subNavigationClass}">
+        <nav class="sub-navigation" style="--active-item: {activeItem}">
             <ul class="sub-navigation-menu">
+                <div class="sub-navigation-slider"></div>
                 {#each subNavigation as item}
-                    <li class="sub-navigation-element">
-                        <svelte:component this={item.icon} class="sub-navigation-icon" />
+                    <li class="sub-navigation-element" class:active={item.link === path}>
+                        {#if item.link}
+                            <a class="sub-navigation-link" href={item.link}>
+                                <svelte:component class="sub-navigation-icon" this={item.icon} />
+                            </a>
+                        {/if}
+                        {#if item.button}
+                            <button on:click={() => dispatch(item.action)}>
+                                <svelte:component this={item.icon} />
+                            </button>
+                        {/if}
                     </li>
                 {/each}
             </ul>
         </nav>
-    
     {/if}
 
 {/if}
