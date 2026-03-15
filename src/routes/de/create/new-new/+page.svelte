@@ -1,65 +1,108 @@
 <script>
-    import { IconCode, IconCircle, IconCircleCheck, IconCircleDot, IconArrowRight, IconArrowLeft, IconX, IconMessage, IconBook, IconPhotoSpark, IconLayoutBoardSplit } from "@tabler/icons-svelte";
+    import { IconCode, IconCircle, IconCircleCheck, IconCircleDot, IconArrowRight, IconArrowLeft, IconX, IconMessage, IconBook, IconPhotoSpark, IconLayoutBoardSplit, IconDog, IconChevronDown, IconTools, IconShield, IconChevronUp } from "@tabler/icons-svelte";
+    import Dropdown from "$lib/components/Dropdown.svelte";
+    import { allModules } from "$lib/js/data/dropdown.js";
+    import { selections } from "$lib/js/data/selections.js";
 
     let selected = null;
-    let step = "step_customCommand_details";
-    let part = { part_customCommand_category: "active" };
+    let step = "step_details_customCommand";
+    let part = { part_details_customCommand_type: "active" };
     let option = null;
+    let triggerElement;
+    let submenuElement;
+    let direction = "down";
+    let currentLabel = null;
     
     const optionPartAssignment = {
-        option_customCommand_category: "part_customCommand_category_details",
-        option_customCommand_flow: "part_customCommand_flow_details"
+        option_details_customCommand_type_category: "part_details_customCommand_category_information",
+        option_details_customCommand_type_flow: "part_details_customCommand_flow_information"
     }
     
-    function toggleOption(optionName) {
-        const previous = selected;
-        const next = selected !== optionName;
+    function toggleOption(block, optionName) {
+        selections.update((store) => {
+            const config = store[block];
+            const previousValue = config.value;
 
-        selected = next ? optionName : null;
+            if (config.type === "single") {
+                config.value = config.value === optionName ? null : optionName;
+            }
 
-        const previousPart = optionPartAssignment[previous];
-        const nextPart = optionPartAssignment[optionName];
+            if (config.type === "multi") {
+                if (config.value.includes(optionName)) {
+                    config.value = config.value.filter(value => value !== optionName);
+                }
 
-        if (previousPart && previousPart !== nextPart) {
-            removePart(previousPart);
-        }
+                if (!config.value.includes(optionName)) {
+                    config.value = [...config.value, optionName];
+                }
+            }
 
-        if (nextPart && next) {
-            addPart(nextPart);
-        }
+            const previousPart = optionPartAssignment[previousValue];
+            const nextPart = optionPartAssignment[optionName];
+            const selected = config.type === "single" ? config.value === optionName : config.value.includes(optionName);
 
-        if (!next && nextPart) {
-            removePart(nextPart);
-        }
+            if (previousPart && previousPart !== nextPart) {
+                removePart(previousPart);
+            }
+            
+            if (nextPart && selected) {
+                addPart(nextPart);
+            }
+
+            if (nextPart && !selected) {
+                removePart(nextPart);
+            }
+
+            return { ...store };
+        });
+    }
+
+    function optionActive(block, optionName) {
+        const config = $selections[block];
+
+        return config.type === "single" ? config.value === optionName : config.value.includes(optionName);
     }
 
     function addPart(partName) {
         setTimeout(() => {
-            part[partName] = "move-down";
-        }, 275)
-
-        setTimeout(() => {
             part[partName] = "enter";
-        }, 300);
+        }, 250);
 
         setTimeout(() => {
             part[partName] = "active";
-        }, 800);
+        }, 500);
     }
 
     function removePart(partName) {
         part[partName] = "exit";
-        part= { ...part };
-
-        setTimeout(() => {
-            part[partName] = "move-up";
-            part = { ...part };
-        }, 250);
+        part = { ...part };
 
         setTimeout(() => {
             delete part[partName];
             part = { ...part };
-        }, 500);
+        }, 250);
+    }
+
+    function toggleDropdown(dropdownName) {
+        const dropdownOpen = selected !== dropdownName;
+        selected = dropdownOpen ? dropdownName : null;
+
+        if (dropdownOpen) {
+            setTimeout(() => {
+                updateDropdownDirection()
+            }, 0);
+        }
+    }
+
+    function updateDropdownDirection() {
+        if (triggerElement && submenuElement) {
+            const triggerRect = triggerElement.getBoundingClientRect();
+            const submenuHeight = submenuElement.offsetHeight;
+            const spaceBelow = window.innerHeight - triggerRect.bottom;
+            const spaceAbove = triggerRect.top;
+
+            direction = spaceBelow < submenuHeight && spaceAbove > submenuHeight ? "up" : "down";
+        }
     }
 </script>
 
@@ -128,50 +171,91 @@
             </div>
         </div>
     </div>
-    <div class="content-section" class:hidden={step !== "step_customCommand_details"}>
-        <div class="form-content-section-fill" class:active={part["part_customCommand_category"] === "active"} class:move-up={part["part_customCommand_category"] === "move-up"} class:move-down={part["part_customCommand_category"] === "move-down"} class:enter={part["part_customCommand_category"] === "enter"} class:exit={part["part_customCommand_category"] === "exit"}>
-            <div class="content-block">
-                <h6 class="heading6">Welche Art von Befehl möchtest du einreichen?</h6>
-            </div>
-            <div class="content-block">
-                <div class="content-block-buttons">
-                    <button class="content-button" class:active={selected === "option_customCommand_category"} on:click={() => toggleOption("option_customCommand_category")}>
-                        <IconCode class="content-button-icon" />
-                        <span class="content-button-font">Kategorie</span>
-                        {#if selected !== "option_customCommand_category"}
-                            <IconCircle class="content-button-icon" />
-                        {/if}
-                        {#if selected === "option_customCommand_category"}
-                            <IconCircleCheck class="content-button-icon" />
-                        {/if}
-                    </button>
-                    <button class="content-button" class:active={selected === "option_customCommand_flow"} on:click={() => toggleOption("option_customCommand_flow")}>
-                        <IconCode class="content-button-icon" />
-                        <span class="content-button-font">Flow</span>
-                        {#if selected !== "option_customCommand_flow"}
-                            <IconCircle class="content-button-icon" />
-                        {/if}
-                        {#if selected === "option_customCommand_flow"}
-                            <IconCircleCheck class="content-button-icon" />
-                        {/if}
-                    </button>
+    <div class="form-content-section" class:hidden={step !== "step_details_customCommand"}>
+        <div class="form-content-section-fill-wrapper" class:hidden={!part["part_details_customCommand_type"]}>
+            <div class="form-content-section-fill" class:active={part["part_details_customCommand_type"] === "active"} class:enter={part["part_details_customCommand_type"] === "enter"} class:exit={part["part_details_customCommand_type"] === "exit"}>
+                <div class="content-block">
+                    <h6 class="heading6">Welche Art von Befehl möchtest du einreichen?</h6>
+                </div>
+                <div class="content-block">
+                    <div class="content-block-buttons">
+                        <button class="content-button" class:active={optionActive("block_details_customCommand_type_selection", "option_details_customCommand_type_category")} on:click={() => toggleOption("block_details_customCommand_type_selection", "option_details_customCommand_type_category")}>
+                            <IconCode class="content-button-icon" />
+                            <span class="content-button-font">Kategorie</span>
+                            {#if !optionActive("block_details_customCommand_type_selection", "option_details_customCommand_type_category")}
+                                <IconCircle class="content-button-icon" />
+                            {/if}
+                            {#if optionActive("block_details_customCommand_type_selection", "option_details_customCommand_type_category")}
+                                <IconCircleCheck class="content-button-icon" />
+                            {/if}
+                        </button>
+                        <button class="content-button" class:active={optionActive("block_details_customCommand_type_selection", "option_details_customCommand_type_flow")} on:click={() => toggleOption("block_details_customCommand_type_selection", "option_details_customCommand_type_flow")}>
+                            <IconCode class="content-button-icon" />
+                            <span class="content-button-font">Flow</span>
+                            {#if !optionActive("block_details_customCommand_type_selection", "option_details_customCommand_type_flow")}
+                                <IconCircle class="content-button-icon" />
+                            {/if}
+                            {#if optionActive("block_details_customCommand_type_selection", "option_details_customCommand_type_flow")}
+                                <IconCircleCheck class="content-button-icon" />
+                            {/if}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="form-content-section-fill" class:active={part["part_customCommand_category_details"] === "active"} class:move-up={part["part_customCommand_category_details"] === "move-up"} class:move-down={part["part_customCommand_category_details"] === "move-down"} class:enter={part["part_customCommand_category_details"] === "enter"} class:exit={part["part_customCommand_category_details"] === "exit"}>
-            <div class="content-block">
-                <h6 class="heading6">Erzähle uns mehr über deinen Befehl.</h6>
-            </div>
-            <div class="content-block">
-                
+        <div class="form-content-section-fill-wrapper" class:hidden={!part["part_details_customCommand_category_information"]}>
+            <div class="form-content-section-fill" class:active={part["part_details_customCommand_category_information"] === "active"} class:enter={part["part_details_customCommand_category_information"] === "enter"} class:exit={part["part_details_customCommand_category_information"] === "exit"}>
+                <div class="content-block">
+                    <h6 class="heading6">Erzähle uns mehr über deinen Befehl.</h6>
+                </div>
+                <div class="content-block">
+                    <div class="form-dropdown">
+                        <ul class="form-dropdown-menu">
+                            <li class="form-dropdown-element">
+                                <button class="form-dropdown-button" on:click={() => toggleDropdown("dropdown_customCommand_category_details_module")} bind:this={triggerElement}>
+                                    <IconDog class="content-button-icon" />
+                                    <span class="content-button-font">{currentLabel ?? "Wähle dein Modul"}</span>
+                                    {#if !optionActive("block_details_customCommand_category_information_module", "dropdown_details_customCommand_category_information_module")}
+                                        <IconChevronDown class="content-button-icon" />
+                                    {/if}
+                                    {#if optionActive("block_details_customCommand_category_information_module", "dropdown_details_customCommand_category_information_module")}
+                                        <IconChevronUp class="content-button-icon" />
+                                    {/if}
+                                </button>
+                            </li>
+                        </ul>
+                        <Dropdown items={allModules} open={selected === "dropdown_customCommand_category_details_module"} direction={direction} bind:submenuElement />
+                    </div>
+                </div>
+                <div class="content-block">
+                    <div class="form-dropdown">
+                        <ul class="form-dropdown-menu">
+                            <li class="form-dropdown-element">
+                                <button class="form-dropdown-button" on:click={() => toggleDropdown("dropdown_customCommand_category_details_test")} bind:this={triggerElement}>
+                                    <IconDog class="content-button-icon" />
+                                    <span class="content-button-font">{currentLabel ?? "Wähle irgendeine Option"}</span>
+                                    {#if selected !== "dropdown_customCommand_category_details_test"}
+                                        <IconChevronDown class="content-button-icon" />
+                                    {/if}
+                                    {#if selected === "dropdown_customCommand_category_details_test"}
+                                        <IconChevronUp class="content-button-icon" />
+                                    {/if}
+                                </button>
+                            </li>
+                        </ul>
+                        <Dropdown items={allModules} open={selected === "dropdown_customCommand_category_details_test"} direction={direction} bind:submenuElement />
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form-content-section-fill" class:active={part["part_customCommand_flow_details"] === "active"} class:move-up={part["part_customCommand_flow_details"] === "move-up"} class:move-down={part["part_customCommand_flow_details"] === "move-down"} class:enter={part["part_customCommand_flow_details"] === "enter"} class:exit={part["part_customCommand_flow_details"] === "exit"}>
-            <div class="content-block">
-                <h6 class="heading6">Erzähle uns mehr über deinen Befehl.</h6>
-            </div>
-            <div class="content-block">
-                
+        <div class="form-content-section-fill-wrapper" class:hidden={!part["part_details_customCommand_flow_information"]}>
+            <div class="form-content-section-fill" class:active={part["part_details_customCommand_flow_information"] === "active"} class:enter={part["part_details_customCommand_flow_information"] === "enter"} class:exit={part["part_details_customCommand_flow_information"] === "exit"}>
+                <div class="content-block">
+                    <h6 class="heading6">Erzähle uns mehr über deinen Befehl.</h6>
+                </div>
+                <div class="content-block">
+                    
+                </div>
             </div>
         </div>
     </div>

@@ -9,7 +9,7 @@
     padding-top: 80px;
     background-color: #000000;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: clip;
 }
 
 .content {
@@ -31,7 +31,7 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 1rem;
     gap: 5rem;
 }
 
@@ -120,13 +120,15 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    min-height: 60px;
+    min-height: 50px;
     height: auto;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    border: 2px solid #FFFFFF;
+    padding: 0.5rem 1rem;
+    gap: 1rem;
+    border: 2px solid #2A2A2A;
     border-radius: 50px;
+    background-color: #1A1A1A;
     transition: 0.25s ease;
 }
 
@@ -152,7 +154,6 @@
     height: 100%;
     justify-content: center;
     align-items: center;
-    padding: 0 1rem;
     font-family: "ADLaMDisplay", Arial, sans-serif;
     font-size: 1rem;
     color: #FFFFFF;
@@ -241,9 +242,10 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    padding: 0 2rem;
-    gap: 5rem;
+    padding: 0 1rem;
+    gap: 2.5rem;
     overflow-x: hidden;
+    overflow-y: clip;
 }
 
 .form-content-section-fill {
@@ -253,27 +255,18 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 2rem 1rem;
     gap: 2.5rem;
     border: 2px solid #2A2A2A;
-    border-radius: 25px;
-    opacity: 1;
+    border-radius: 35px;
     background-color: #1A1A1A;
-    transform: translateX(100%);
+    opacity: 1;
+    transform: translateX(calc(100% + 2rem));
     transition: 0.25s ease;
+    will-change: transform;
 }
 
 .form-content-section-fill.active {
-    position: relative;
-    transform: translateX(0);
-}
-
-.form-content-section-fill.move-up {
-    position: absolute;
-    transform: translateX(calc(100% + 2rem));
-}
-
-.form-content-section-fill.move-down {
     position: relative;
     transform: translateX(0);
 }
@@ -284,6 +277,110 @@
 }
 
 .form-content-section-fill.exit {
-    position: relative;
+    position: absolute;
+    opacity: 1;
     transform: translateX(calc(100% + 2rem));
+    transition: 0.25s ease;
+}
+
+.form-content-section-fill-wrapper {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 1;
+}
+
+.form-content-section-fill-wrapper.hidden {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.form-dropdown {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-dropdown-menu {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.form-dropdown-submenu {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem;
+    padding-top: 90px;
+    gap: 1rem;
+    opacity: 0;
+    border: 2px solid #2A2A2A;
+    border-radius: 35px;
+    background-color: #000000;
+    list-style: none;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: 0.5s ease;
+    overflow-y: auto;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.form-dropdown-submenu.up {
+    top: auto;
+    bottom: 5px;
+    padding-top: 1rem;
+    padding-bottom: 5rem;
+    transform-origin: bottom;
+}
+
+.form-dropdown-submenu.open {
+    opacity: 1;
+    transform: scaleY(100%);
+    pointer-events: auto;
+}
+
+.form-dropdown-element {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #2A2A2A;
+    border-radius: 50px;
+    background-color: #1A1A1A;
+    z-index: 2;
+}
+
+.form-dropdown-button {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 50px;
+    height: auto;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    gap: 1rem;
 }
