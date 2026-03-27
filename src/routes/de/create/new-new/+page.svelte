@@ -1,5 +1,5 @@
 <script>
-    import { IconCode, IconCircle, IconCircleCheck, IconCircleDot, IconArrowRight, IconArrowLeft, IconX, IconMessage, IconBook, IconPhotoSpark, IconLayoutBoardSplit, IconDog, IconChevronDown, IconTools, IconShield, IconChevronUp } from "@tabler/icons-svelte";
+    import { IconCode, IconCircle, IconCircleCheck, IconMessage, IconBook, IconPhotoSpark, IconLayoutBoardSplit, IconDog, IconChevronDown, IconChevronUp } from "@tabler/icons-svelte";
     import Dropdown from "$lib/components/Dropdown.svelte";
     import { allModules } from "$lib/js/data/dropdown.js";
     import { selections } from "$lib/js/data/selections.js";
@@ -7,7 +7,6 @@
     let selected = null;
     let step = "step_details_customCommand";
     let part = { part_details_customCommand_type: "active" };
-    let option = null;
     let triggerElement;
     let submenuElement;
     let direction = "down";
@@ -66,10 +65,12 @@
     function addPart(partName) {
         setTimeout(() => {
             part[partName] = "enter";
+            part = { ...part}
         }, 250);
 
         setTimeout(() => {
             part[partName] = "active";
+            part = { ...part}
         }, 500);
     }
 

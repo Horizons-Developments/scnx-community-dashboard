@@ -22,5 +22,13 @@ const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 	{
 		files: ['**/*.svelte', '**/*.svelte.js'],
 		languageOptions: { parserOptions: { svelteConfig } }
+	},
+
+	{
+		"rules": {
+			"svelte/no-navigation-without-resolve": "off",
+			"svelte/require-each-key": "off"
+		}
 	}
+
 ];

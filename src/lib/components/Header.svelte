@@ -3,14 +3,15 @@
     import logo from "$lib/assets/images/logo.png";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
-    import { get } from "svelte/store";
-    import { onMount } from "svelte";
     import { navigationOpen } from "$lib/js/navigation";
     import { IconHome, IconApps, IconCode, IconChevronLeft, IconChevronRight, IconList, IconPlus, IconInfoCircle, IconMenu2, IconX } from "@tabler/icons-svelte";
-	import { pgTable } from "drizzle-orm/pg-core";
-    import { fade, scale } from "svelte/transition";
+    import { fade } from "svelte/transition";
+    import { createEventDispatcher } from "svelte";
+    
     export let lang = "en";
     export let data;
+
+    const dispatch = createEventDispatcher();
 
     function switchLanguage(lang) {
         const languageSwitcher = document.querySelector(".language-switcher");
@@ -411,7 +412,7 @@
         <nav class="sub-navigation" style="--active-item: {activeItem}">
             <ul class="sub-navigation-menu">
                 <div class="sub-navigation-slider"></div>
-                {#each subNavigation as item}
+                {#each subNavigation as item }
                     <li class="sub-navigation-element" class:active={item.link === path}>
                         {#if item.link}
                             <a class="sub-navigation-link" href={item.link}>

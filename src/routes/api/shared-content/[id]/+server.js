@@ -1,4 +1,4 @@
-import { SCNX_API_TOKEN } from "$env/dynamic/private";
+import { SCNX_API_TOKEN } from "$env/static/private";
 
 export async function GET({ params }) {
     const { id } = params;
